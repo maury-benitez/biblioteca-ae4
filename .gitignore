@@ -1,0 +1,11 @@
+# Java
+*.class
+
+# Salidas de compilación de los proyectos NetBeans/Ant
+build/
+dist/
+
+# Configuración local de NetBeans
+nbproject/private/
+/BibliotecaClases/nbproject/private/
+/BibliotecaConsola/nbproject/private/
