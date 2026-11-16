@@ -75,7 +75,7 @@ public class Prestamo implements Serializable {
         if (fechaDevolucion == null) {
             throw new IllegalArgumentException("Debe indicar la fecha de devolución.");
         }
-        if (isDevuelto()) {
+        if (isDevuelto() || fechaDevolucion.isBefore(fechaPrestamo)) {
             return false;
         }
 

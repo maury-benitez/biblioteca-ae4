@@ -33,7 +33,7 @@ public class GestorPrestamos implements Informable, Serializable {
         if (fecha == null) {
             throw new IllegalArgumentException("Debe indicar la fecha del préstamo.");
         }
-        if (!libro.hayDisponibles()) {
+        if (!socio.isActivo() || !libro.hayDisponibles()) {
             return false;
         }
 
@@ -114,7 +114,7 @@ public class GestorPrestamos implements Informable, Serializable {
         }
 
         for (Prestamo prestamo : prestamos) {
-            if (prestamo.getSocio().getDni().equals(socio.getDni())) {
+            if (prestamo.estaActivo() && prestamo.getSocio().getDni().equals(socio.getDni())) {
                 return true;
             }
         }
