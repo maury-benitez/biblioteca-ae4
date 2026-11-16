@@ -5,6 +5,8 @@ package modelo;
  */
 public class Usuario extends Persona implements Autenticable {
 
+    private static final long serialVersionUID = 1L;
+
     private String nombreUsuario;
     private String contrasena;
 
@@ -13,7 +15,14 @@ public class Usuario extends Persona implements Autenticable {
             String nombreUsuario, String contrasena) {
         // llamo al constructor de Persona con los datos comunes
         super(nombre, apellido, dni, email, telefono);
-        this.nombreUsuario = nombreUsuario;
+        if (nombreUsuario == null || nombreUsuario.isBlank()) {
+            throw new IllegalArgumentException("El nombre de usuario no puede estar en blanco.");
+        }
+        if (contrasena == null || contrasena.isBlank()) {
+            throw new IllegalArgumentException("La contraseña no puede estar en blanco.");
+        }
+
+        this.nombreUsuario = nombreUsuario.strip();
         this.contrasena = contrasena;
     }
 
@@ -24,7 +33,11 @@ public class Usuario extends Persona implements Autenticable {
 
     // Cambia el nombre de usuario
     public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+        if (nombreUsuario == null || nombreUsuario.isBlank()) {
+            throw new IllegalArgumentException("El nombre de usuario no puede estar en blanco.");
+        }
+
+        this.nombreUsuario = nombreUsuario.strip();
     }
 
     // Devuelve la contraseña
@@ -34,13 +47,19 @@ public class Usuario extends Persona implements Autenticable {
 
     // Cambia la contraseña
     public void setContrasena(String contrasena) {
+        if (contrasena == null || contrasena.isBlank()) {
+            throw new IllegalArgumentException("La contraseña no puede estar en blanco.");
+        }
+
         this.contrasena = contrasena;
     }
 
     // Verifica si el usuario y la contraseña recibidos coinciden con los míos
     @Override
     public boolean validarCredenciales(String nombreUsuario, String contrasena) {
-        return this.nombreUsuario.equals(nombreUsuario) && this.contrasena.equals(contrasena);
+        return nombreUsuario != null && contrasena != null
+                && this.nombreUsuario.equals(nombreUsuario.strip())
+                && this.contrasena.equals(contrasena);
     }
 
     // Muestra los datos del usuario (sin la contraseña)
