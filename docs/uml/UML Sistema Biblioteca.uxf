@@ -1,0 +1,369 @@
+<diagram program="umletino" version="15.1"><zoom_level>4</zoom_level><element><id>UMLClass</id><coordinates><x>564</x><y>372</y><w>180</w><h>136</h></coordinates><panel_attributes>SistemaBiblioteca
+--
+-gestorUsuarios: GestorUsuarios
+-gestorSocios: GestorSocios
+-gestorPrestamos: GestorPrestamos
+-gestorLibros: GestorLibros
+-gestorCategorias: GestorCategorias
+-usuarioLogueado: Usuario
+--
++SistemaBiblioteca()
++iniciar(): void
++finalizar(): void
++getGestorUsuarios(): GestorUsuarios
++getGestorSocios(): GestorSocios
++getGestorPrestamos(): GestorPrestamos
++getGestorLibros(): GestorLibros
++getGestorCategorias(): GestorCategorias
++getUsuarioLogueado(): Usuario
++iniciarSesion(nombreUsuario: String, contrasena: String): boolean
++cerrarSesion(): void
++haySesionActiva(): boolean
+-cargarDatos(): void
+-guardarDatos(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>512</x><y>580</y><w>64</w><h>36</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Persistible
+--
+/+guardarDatos():void/
+/+cargarDatos():void/
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>940</x><y>580</y><w>76</w><h>28</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Informable
+--
+/+generarInforme():String/
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>164</x><y>1096</y><w>124</w><h>36</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Autenticable
+--
+/+validarCredenciales(nombreUsuario:String,/
+/    contrasena:String):boolean/
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>132</x><y>672</y><w>180</w><h>100</h></coordinates><panel_attributes>GestorUsuarios
+--
+-usuarios: ArrayList&lt;Usuario&gt;
+--
++GestorUsuarios()
++getUsuarios():ArrayList&lt;Usuario&gt;
++setUsuarios(usuarios:ArrayList&lt;Usuario&gt;):void
++registrarUsuario(usuario:Usuario):boolean
++iniciarSesion(nombreUsuario:String,
+    contrasena:String):Usuario
++recuperarContrasena(nombreUsuario:String, dni:String,
+    nuevaContrasena:String):boolean
++recuperarUsuario(dni:String, email:String):String
++existeUsuario(nombreUsuario:String):boolean
++existeDni(dni:String):boolean
++guardarDatos():void
++cargarDatos():void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>372</x><y>672</y><w>128</w><h>88</h></coordinates><panel_attributes>GestorSocios
+--
+-socios: ArrayList&lt;Socio&gt;
+--
++GestorSocios()
++getSocios():ArrayList&lt;Socio&gt;
++setSocios(socios:ArrayList&lt;Socio&gt;):void
++altaSocio(socio:Socio):boolean
++bajaSocio(dni:String):boolean
++modificarSocio(socio:Socio):boolean
++buscarPorDni(dni:String):Socio
++buscarPorNombre(nombre:String):ArrayList&lt;Socio&gt;
++existeDni(dni:String):boolean
++guardarDatos():void
++cargarDatos():void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>564</x><y>656</y><w>140</w><h>100</h></coordinates><panel_attributes>GestorPrestamos
+--
+-prestamos: ArrayList&lt;Prestamo&gt;
+--
++GestorPrestamos()
++getPrestamos():ArrayList&lt;Prestamo&gt;
++setPrestamos(prestamos:ArrayList&lt;Prestamo&gt;):void
++registrarPrestamo(socio:Socio, libro:Libro,
+    fecha:String):boolean
++registrarDevolucion(idPrestamo:int, fecha:String):boolean
++buscarPorId(idPrestamo:int):Prestamo
++listarActivos():ArrayList&lt;Prestamo&gt;
++historialSocio(socio:Socio):ArrayList&lt;Prestamo&gt;
++tienePrestamosPendientes(socio:Socio):boolean
++generarInforme():String
++guardarDatos():void
++cargarDatos():void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>780</x><y>656</y><w>180</w><h>116</h></coordinates><panel_attributes>GestorLibros
+--
+-libros: ArrayList&lt;Libro&gt;
+--
++GestorLibros()
++getLibros():ArrayList&lt;Libro&gt;
++setLibros(libros:ArrayList&lt;Libro&gt;):void
++altaLibro(libro:Libro):boolean
++bajaLibro(isbn:String):boolean
++modificarLibro(libro:Libro):boolean
++buscarPorIsbn(isbn:String):Libro
++buscarPorTitulo(titulo:String):ArrayList&lt;Libro&gt;
++buscarPorAutor(autor:String):ArrayList&lt;Libro&gt;
++buscarPorCategoria(categoria:Categoria):ArrayList&lt;Libro&gt;
++listarDisponibles():ArrayList&lt;Libro&gt;
++listarPrestados():ArrayList&lt;Libro&gt;
++contarPorCategoria(categoria:Categoria):int
++generarInforme():String
++guardarDatos():void
++cargarDatos():void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>996</x><y>656</y><w>180</w><h>100</h></coordinates><panel_attributes>GestorCategorias
+--
+-categorias: ArrayList&lt;Categoria&gt;
+-gestorLibros: GestorLibros
+--
++GestorCategorias(gestorLibros:GestorLibros)
++getCategorias():ArrayList&lt;Categoria&gt;
++setCategorias(categorias:ArrayList&lt;Categoria&gt;):void
++getGestorLibros():GestorLibros
++setGestorLibros(gestorLibros:GestorLibros):void
++altaCategoria(categoria:Categoria):boolean
++bajaCategoria(idCategoria:int):boolean
++modificarCategoria(categoria:Categoria):boolean
++buscarPorId(idCategoria:int):Categoria
++generarInforme():String
++guardarDatos():void
++cargarDatos():void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>196</x><y>800</y><w>180</w><h>128</h></coordinates><panel_attributes>&lt;&lt;abstract&gt;&gt;
+Persona
+--
+-nombre: String
+-apellido: String
+-dni: String
+-email: String
+-telefono: String
+--
++Persona(nombre:String, apellido:String, dni:String,
+    email:String, telefono:String)
++getNombre():String
++setNombre(nombre:String):void
++getApellido():String
++setApellido(apellido:String):void
++getDni():String
++setDni(dni:String):void
++getEmail():String
++setEmail(email:String):void
++getTelefono():String
++setTelefono(telefono:String):void
+/+mostrarDatos():String/
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>132</x><y>968</y><w>180</w><h>88</h></coordinates><panel_attributes>Usuario
+--
+-nombreUsuario: String
+-contrasena: String
+--
++Usuario(nombre:String, apellido:String, dni:String,
+    email:String, telefono:String, nombreUsuario:String,
+    contrasena:String)
++getNombreUsuario():String
++setNombreUsuario(nombreUsuario:String):void
++getContrasena():String
++setContrasena(contrasena:String):void
++validarCredenciales(nombreUsuario:String,
+    contrasena:String):boolean
++mostrarDatos():String
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>372</x><y>1000</y><w>120</w><h>56</h></coordinates><panel_attributes>Socio
+--
+-nroSocio: int
+--
++Socio(nombre:String, apellido:String, dni:String,
+    email:String, telefono:String, nroSocio:int)
++getNroSocio():int
++setNroSocio(nroSocio:int):void
++mostrarDatos():String
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>564</x><y>1000</y><w>136</w><h>164</h></coordinates><panel_attributes>Prestamo
+--
+_-contadorPrestamos: int_
+-idPrestamo: int
+-socio: Socio
+-libro: Libro
+-fechaPrestamo: String
+-fechaDevolucion: String
+-devuelto: boolean
+--
++Prestamo(socio:Socio, libro:Libro, fechaPrestamo:String)
+_+getContadorPrestamos():int_
+_+setContadorPrestamos(contadorPrestamos:int):void_
++getIdPrestamo():int
++setIdPrestamo(idPrestamo:int):void
++getSocio():Socio
++setSocio(socio:Socio):void
++getLibro():Libro
++setLibro(libro:Libro):void
++getFechaPrestamo():String
++setFechaPrestamo(fechaPrestamo:String):void
++getFechaDevolucion():String
++setFechaDevolucion(fechaDevolucion:String):void
++isDevuelto():boolean
++setDevuelto(devuelto:boolean):void
++registrarDevolucion(fechaDevolucion:String):void
++estaActivo():boolean
++mostrarDatos():String
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>780</x><y>944</y><w>180</w><h>160</h></coordinates><panel_attributes>Libro
+--
+-isbn: String
+-titulo: String
+-autor: String
+-categoria: Categoria
+-cantidadEjemplares: int
+-ejemplaresDisponibles: int
+--
++Libro(isbn:String, titulo:String, autor:String,
+    categoria:Categoria, cantidadEjemplares:int)
++getIsbn():String
++setIsbn(isbn:String):void
++getTitulo():String
++setTitulo(titulo:String):void
++getAutor():String
++setAutor(autor:String):void
++getCategoria():Categoria
++setCategoria(categoria:Categoria):void
++getCantidadEjemplares():int
++setCantidadEjemplares(cantidadEjemplares:int):void
++getEjemplaresDisponibles():int
++setEjemplaresDisponibles(ejemplaresDisponibles:int):void
++hayDisponibles():boolean
++descontarEjemplar():void
++sumarEjemplar():void
++mostrarDatos():String
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>996</x><y>1008</y><w>180</w><h>80</h></coordinates><panel_attributes>Categoria
+--
+-idCategoria: int
+-nombre: String
+-descripcion: String
+--
++Categoria(idCategoria:int, nombre:String, descripcion:String)
++getIdCategoria():int
++setIdCategoria(idCategoria:int):void
++getNombre():String
++setNombre(nombre:String):void
++getDescripcion():String
++setDescripcion(descripcion:String):void
++mostrarDatos():String
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>188</x><y>504</y><w>416</w><h>176</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>1012;10;1012;120;10;120;10;420</additional_attributes></element><element><id>Relation</id><coordinates><x>432</x><y>504</y><w>204</w><h>176</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>481;10;481;150;10;150;10;420</additional_attributes></element><element><id>Relation</id><coordinates><x>648</x><y>504</y><w>16</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;380</additional_attributes></element><element><id>Relation</id><coordinates><x>676</x><y>504</y><w>204</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;150;480;150;481;380</additional_attributes></element><element><id>Relation</id><coordinates><x>704</x><y>504</y><w>392</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;120;952;120;952;380</additional_attributes></element><element><id>Relation</id><coordinates><x>104</x><y>444</y><w>468</w><h>552</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..1
+m2=1</panel_attributes><additional_attributes>70;1355;10;1355;10;10;1152;10</additional_attributes></element><element><id>Relation</id><coordinates><x>292</x><y>612</y><w>240</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>573.7;10;573.7;84;10;84;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>464</x><y>612</y><w>80</w><h>68</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>174.3;10;174.3;84;10;84;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>612</y><w>56</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;84;115.19999999999999;84;115.19999999999999;110</additional_attributes></element><element><id>Relation</id><coordinates><x>552</x><y>612</y><w>272</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;84;654.7;84;654.7;110</additional_attributes></element><element><id>Relation</id><coordinates><x>568</x><y>612</y><w>476</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;84;1164.1;84;1164.1;110</additional_attributes></element><element><id>Relation</id><coordinates><x>688</x><y>604</y><w>272</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>657.8;10;657.8;54;10;50;10;126</additional_attributes></element><element><id>Relation</id><coordinates><x>920</x><y>604</y><w>68</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>144.7;10;144.7;74;10;74;10;126</additional_attributes></element><element><id>Relation</id><coordinates><x>996</x><y>604</y><w>152</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;74;358.4;74;358.4;126</additional_attributes></element><element><id>Relation</id><coordinates><x>956</x><y>672</y><w>48</w><h>16</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;100;10</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>768</y><w>20</w><h>208</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;10;498</additional_attributes></element><element><id>Relation</id><coordinates><x>432</x><y>756</y><w>20</w><h>252</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;10;608</additional_attributes></element><element><id>Relation</id><coordinates><x>632</x><y>752</y><w>20</w><h>256</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;10;620</additional_attributes></element><element><id>Relation</id><coordinates><x>860</x><y>768</y><w>20</w><h>184</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;10;438</additional_attributes></element><element><id>Relation</id><coordinates><x>1076</x><y>752</y><w>20</w><h>264</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;10;638</additional_attributes></element><element><id>Relation</id><coordinates><x>252</x><y>924</y><w>12</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10.900000000000006;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>924</y><w>108</w><h>84</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;112;250.89999999999998;112;250.89999999999998;190</additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>1052</y><w>12</w><h>52</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>488</x><y>1016</y><w>84</w><h>16</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>10;10;190;10</additional_attributes></element><element><id>Relation</id><coordinates><x>696</x><y>1036</y><w>92</w><h>16</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>210;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>956</x><y>1020</y><w>48</w><h>16</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+m2=0..*</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>464</x><y>752</y><w>120</w><h>256</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;618;10;468;276.2;468;276.2;10</additional_attributes></element><element><id>Relation</id><coordinates><x>696</x><y>752</y><w>108</w><h>200</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>250.60000000000002;478;250.60000000000002;408;10;408;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>928</x><y>768</y><w>92</w><h>248</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>210.60000000000002;598;210.60000000000002;388;10;388;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>564</x><y>52</y><w>180</w><h>76</h></coordinates><panel_attributes>MenuPrincipal
+--
+-sistema: SistemaBiblioteca
+-entrada: EntradaConsola
+-menuUsuarios: MenuUsuarios
+-menuSocios: MenuSocios
+-menuLibros: MenuLibros
+-menuCategorias: MenuCategorias
+-menuPrestamos: MenuPrestamos
+--
++MenuPrincipal(sistema: SistemaBiblioteca, entrada: EntradaConsola)
++mostrar(): void
+-mostrarOpciones(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>812</x><y>52</y><w>156</w><h>64</h></coordinates><panel_attributes>EntradaConsola
+--
+-scanner: Scanner
+--
++EntradaConsola()
++leerCadena(mensaje: String): String
++leerEntero(mensaje: String): int
++leerEnteroEnRango(mensaje: String, minimo: int, maximo: int): int
++leerContrasena(mensaje: String): String
++confirmar(mensaje: String): boolean
++cerrar(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>152</x><y>268</y><w>180</w><h>64</h></coordinates><panel_attributes>MenuUsuarios
+--
+-sistema: SistemaBiblioteca
+-entrada: EntradaConsola
+--
++MenuUsuarios(sistema: SistemaBiblioteca, entrada: EntradaConsola)
++mostrarLogueo(): boolean
+-iniciarSesion(): void
+-registrarUsuario(): void
+-recuperarContrasena(): void
+-recuperarUsuario(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>372</x><y>264</y><w>180</w><h>64</h></coordinates><panel_attributes>MenuSocios
+--
+-gestorSocios: GestorSocios
+-entrada: EntradaConsola
+--
++MenuSocios(gestorSocios: GestorSocios, entrada: EntradaConsola)
++mostrar(): void
+-altaSocio(): void
+-bajaSocio(): void
+-modificarSocio(): void
+-buscarSocios(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>564</x><y>244</y><w>180</w><h>92</h></coordinates><panel_attributes>MenuPrestamos
+--
+-gestorPrestamos: GestorPrestamos
+-gestorSocios: GestorSocios
+-gestorLibros: GestorLibros
+-entrada: EntradaConsola
+--
++MenuPrestamos(gestorPrestamos: GestorPrestamos,
+    gestorSocios: GestorSocios, gestorLibros: GestorLibros,
+    entrada: EntradaConsola)
++mostrar(): void
+-registrarPrestamo(): void
+-registrarDevolucion(): void
+-listarActivos(): void
+-mostrarHistorialSocio(): void
+-mostrarInforme(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>796</x><y>244</y><w>180</w><h>84</h></coordinates><panel_attributes>MenuLibros
+--
+-gestorLibros: GestorLibros
+-gestorCategorias: GestorCategorias
+-entrada: EntradaConsola
+--
++MenuLibros(gestorLibros: GestorLibros,
+    gestorCategorias: GestorCategorias, entrada: EntradaConsola)
++mostrar(): void
+-altaLibro(): void
+-bajaLibro(): void
+-modificarLibro(): void
+-buscarLibros(): void
+-mostrarInformes(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1044</x><y>256</y><w>128</w><h>68</h></coordinates><panel_attributes>MenuCategorias
+--
+-gestorCategorias: GestorCategorias
+-entrada: EntradaConsola
+--
++MenuCategorias(gestorCategorias: GestorCategorias,
+    entrada: EntradaConsola)
++mostrar(): void
+-altaCategoria(): void
+-bajaCategoria(): void
+-modificarCategoria(): void
+-listarCategorias(): void
+fontsize=12</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>236</x><y>124</y><w>364</w><h>152</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>885;10;885;120;10;120;10;360</additional_attributes></element><element><id>Relation</id><coordinates><x>456</x><y>124</y><w>168</w><h>148</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>395;10;395;170;10;170;10;350</additional_attributes></element><element><id>Relation</id><coordinates><x>636</x><y>124</y><w>16</w><h>128</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;300</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>124</y><w>236</w><h>128</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;170;565;170;565;300</additional_attributes></element><element><id>Relation</id><coordinates><x>684</x><y>124</y><w>412</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;120;1005;120;1005;330</additional_attributes></element><element><id>Relation</id><coordinates><x>740</x><y>100</y><w>80</w><h>16</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+m2=0..1</panel_attributes><additional_attributes>180;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>276</x><y>328</y><w>12</w><h>352</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;860;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>476</x><y>324</y><w>12</w><h>356</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;870;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>676</x><y>332</y><w>92</w><h>332</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;810;10;730;210;730;210;60;110;60;110;10</additional_attributes></element><element><id>Relation</id><coordinates><x>892</x><y>324</y><w>12</w><h>340</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;830;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1156</x><y>320</y><w>12</w><h>344</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;840;10;10</additional_attributes></element></diagram>
