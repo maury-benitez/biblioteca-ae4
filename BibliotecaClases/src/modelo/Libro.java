@@ -101,7 +101,7 @@ public class Libro implements Serializable {
     }
 
     public boolean hayDisponibles() {
-        return activo && ejemplaresDisponibles > 1;
+        return activo && ejemplaresDisponibles > 0;
     }
 
     public boolean descontarEjemplar() {
