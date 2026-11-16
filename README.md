@@ -7,8 +7,8 @@ Trabajo Integrador (AE4) de la asignatura **Programación Orientada a Objetos**,
 | **Universidad** | Universidad de la Cuenca del Plata, Sede Formosa |
 | **Carrera** | Licenciatura en Sistemas de la Información |
 | **Asignatura** | Programación Orientada a Objetos (2026) |
-| **Docente** | Lic. Ricardo Gastón Plazas, Lic. Samaniego Mauro |
-| **Integrantes** | Mauricio Benitez, Perez Thiago |
+| **Docente** | Lic. Ricardo Gastón Plazas - Lic. Samaniego Mauro |
+| **Integrantes** | Mauricio Benitez - Perez Thiago |
 
 ## Descripción
 
