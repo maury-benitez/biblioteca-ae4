@@ -35,10 +35,10 @@ public class MenuPrincipal {
                 int opcion = entrada.leerEnteroEnRango("Seleccione una opción: ", 0, 5);
                 switch (opcion) {
                     case 1:
-                        menuSocios.mostrar();
+                        menuLibros.mostrar();
                         break;
                     case 2:
-                        menuLibros.mostrar();
+                        menuSocios.mostrar();
                         break;
                     case 3:
                         menuCategorias.mostrar();
@@ -49,7 +49,7 @@ public class MenuPrincipal {
                     case 5:
                         return;
                     case 0:
-                        return;
+                        break;
                     default:
                         break;
                 }
