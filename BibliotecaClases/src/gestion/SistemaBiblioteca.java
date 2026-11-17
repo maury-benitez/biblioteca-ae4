@@ -50,6 +50,7 @@ public class SistemaBiblioteca implements Persistible, Serializable {
     }
 
     public void finalizar() {
+        guardarDatos();
         cerrarSesion();
     }
 
@@ -97,7 +98,7 @@ public class SistemaBiblioteca implements Persistible, Serializable {
 
         Socio socio = gestorSocios.buscarPorDni(dni);
 
-        if (socio == null) {
+        if (socio == null || gestorPrestamos.tienePrestamosPendientes(socio)) {
             return false;
         }
 
@@ -119,6 +120,10 @@ public class SistemaBiblioteca implements Persistible, Serializable {
     }
 
     public boolean registrarPrestamo(String dni, String isbn, LocalDate fecha) {
+        if (!haySesionActiva()) {
+            throw new IllegalStateException("Debe iniciar sesión para registrar un préstamo.");
+        }
+
         Socio socio = gestorSocios.buscarPorDni(dni);
         Libro libro = gestorLibros.buscarPorIsbn(isbn);
 
@@ -203,20 +208,9 @@ public class SistemaBiblioteca implements Persistible, Serializable {
             throw new IllegalStateException("El archivo contiene clases que no son compatibles con la biblioteca.", ex);
         }
 
+        cargado.restaurarContadorPrestamos();
         gestorUsuarios = cargado.gestorUsuarios;
-        gestorSocios = new GestorSocios();
-
-        for (Socio socio : cargado.gestorSocios.getSocios()) {
-            Socio copia = new Socio(socio.getNombre(), socio.getApellido(), socio.getDni(),
-                    socio.getEmail(), socio.getTelefono(), socio.getNroSocio());
-
-            if (!socio.isActivo()) {
-                copia.desactivar();
-            }
-
-            gestorSocios.altaSocio(copia);
-        }
-
+        gestorSocios = cargado.gestorSocios;
         gestorPrestamos = cargado.gestorPrestamos;
         gestorLibros = cargado.gestorLibros;
         gestorCategorias = cargado.gestorCategorias;
