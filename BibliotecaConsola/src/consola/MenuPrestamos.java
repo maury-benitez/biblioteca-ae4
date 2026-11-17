@@ -66,6 +66,10 @@ public class MenuPrestamos {
     private void registrarDevolucion() {
         int id = entrada.leerEnteroEnRango("Número de préstamo: ", 1, Integer.MAX_VALUE);
         LocalDate fecha = LocalDate.parse(entrada.leerCadena("Fecha de devolución (AAAA-MM-DD): "));
+        if (!entrada.confirmar("¿Registrar la devolución?")) {
+            System.out.println("Devolución cancelada.");
+            return;
+        }
         if (sistema.registrarDevolucion(id, fecha)) {
             sistema.guardarDatos();
             System.out.println("Devolución registrada.");
@@ -75,7 +79,7 @@ public class MenuPrestamos {
     }
 
     private void listarActivos() {
-        List<Prestamo> prestamos = sistema.getGestorPrestamos().getPrestamos();
+        List<Prestamo> prestamos = sistema.getGestorPrestamos().listarActivos();
         System.out.println("Préstamos activos: " + prestamos.size());
         mostrarPrestamos(prestamos);
     }

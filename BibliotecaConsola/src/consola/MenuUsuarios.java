@@ -83,6 +83,11 @@ public class MenuUsuarios {
         String contrasena = entrada.leerContrasena("Contraseña: ");
         String confirmacion = entrada.leerContrasena("Repita la contraseña: ");
 
+        if (!contrasena.equals(confirmacion)) {
+            System.out.println("Las contraseñas no coinciden.");
+            return;
+        }
+
         Usuario usuario = new Usuario(nombre, apellido, dni, email, telefono, nombreUsuario, contrasena);
 
         if (sistema.getGestorUsuarios().registrarUsuario(usuario)) {
@@ -105,6 +110,7 @@ public class MenuUsuarios {
         }
 
         if (sistema.getGestorUsuarios().recuperarContrasena(nombreUsuario, dni, contrasena)) {
+            sistema.guardarDatos();
             System.out.println("La contraseña fue actualizada.");
         } else {
             System.out.println("El nombre de usuario y el DNI no coinciden con un usuario registrado.");
