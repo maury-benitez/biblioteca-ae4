@@ -4,6 +4,7 @@
 # Salidas de compilación de los proyectos NetBeans/Ant
 build/
 dist/
+datos/
 
 # Configuración local de NetBeans
 nbproject/private/
