@@ -47,9 +47,11 @@ public class MenuPrincipal {
                         menuPrestamos.mostrar();
                         break;
                     case 5:
-                        return;
-                    case 0:
+                        sistema.cerrarSesion();
+                        System.out.println("Sesión cerrada.");
                         break;
+                    case 0:
+                        return;
                     default:
                         break;
                 }
