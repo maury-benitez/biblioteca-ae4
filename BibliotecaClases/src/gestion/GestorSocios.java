@@ -24,10 +24,16 @@ public class GestorSocios implements Serializable {
         return new ArrayList<>(socios);
     }
 
-    // Da de alta un socio si no hay otro socio activo con el mismo DNI
+    // Da de alta un socio activo si no se repiten el DNI ni el número
     public boolean altaSocio(Socio socio) {
-        if (socio == null || existeDni(socio.getDni())) {
+        if (socio == null || !socio.isActivo() || existeDni(socio.getDni())) {
             return false;
+        }
+
+        for (Socio registrado : socios) {
+            if (registrado.getNroSocio() == socio.getNroSocio()) {
+                return false;
+            }
         }
 
         socios.add(socio);
@@ -104,9 +110,19 @@ public class GestorSocios implements Serializable {
         return encontrados;
     }
 
-    // Indica si hay un socio activo con ese DNI
+    // Indica si el DNI está registrado, incluidos los socios dados de baja
     public boolean existeDni(String dni) {
-        return buscarPorDni(dni) != null;
+        if (dni == null || dni.isBlank()) {
+            return false;
+        }
+
+        for (Socio socio : socios) {
+            if (socio.getDni().equals(dni.strip())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
