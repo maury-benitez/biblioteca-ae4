@@ -3,6 +3,9 @@ package consola;
 import gestion.SistemaBiblioteca;
 import java.io.UncheckedIOException;
 
+/**
+ * Coordina el acceso autenticado a los menús de gestión de la biblioteca.
+ */
 public class MenuPrincipal {
     private final SistemaBiblioteca sistema;
     private final EntradaConsola entrada;
@@ -12,6 +15,12 @@ public class MenuPrincipal {
     private final MenuCategorias menuCategorias;
     private final MenuPrestamos menuPrestamos;
 
+    /**
+     * Prepara el menú principal y sus submenús con el mismo sistema y lector de consola.
+     *
+     * @param sistema sistema de biblioteca compartido por los menús.
+     * @param entrada lector utilizado para solicitar y validar las respuestas de consola.
+     */
     public MenuPrincipal(SistemaBiblioteca sistema, EntradaConsola entrada) {
         if (sistema == null || entrada == null) {
             throw new IllegalArgumentException("El sistema y la entrada son obligatorios.");
@@ -25,8 +34,13 @@ public class MenuPrincipal {
         menuPrestamos = new MenuPrestamos(sistema, entrada);
     }
 
+    /**
+     * Solicita el acceso cuando corresponde y coordina la navegación hasta salir o finalizar la
+     * entrada.
+     */
     public void mostrar() {
         while (true) {
+            // Requiere autenticación al entrar y vuelve a solicitarla después de cerrar sesión.
             if (!sistema.haySesionActiva() && !menuUsuarios.mostrarLogueo()) {
                 return;
             }
@@ -64,6 +78,9 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Imprime las opciones disponibles en el menú principal.
+     */
     private void mostrarOpciones() {
         System.out.println("\nSISTEMA DE BIBLIOTECA");
         System.out.println("1. Libros");

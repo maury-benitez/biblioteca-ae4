@@ -1,7 +1,7 @@
 package modelo;
 
 /**
- * Representa a un usuario de la biblioteca como especialización de Persona.
+ * Representa a una persona con credenciales para acceder al sistema de biblioteca.
  */
 public class Usuario extends Persona implements Autenticable {
 
@@ -10,11 +10,22 @@ public class Usuario extends Persona implements Autenticable {
     private String nombreUsuario;
     private String contrasena;
 
-    // Constructor: recibe los datos de la persona y los del usuario
+    /**
+     * Crea un usuario con sus datos personales y sus credenciales de acceso.
+     *
+     * @param nombre nombre que se asigna al objeto.
+     * @param apellido apellido de la persona.
+     * @param dni DNI que identifica a la persona.
+     * @param email correo electrónico de la persona.
+     * @param telefono número de teléfono de la persona.
+     * @param nombreUsuario nombre de usuario para el acceso al sistema.
+     * @param contrasena contraseña utilizada en la operación.
+     */
     public Usuario(String nombre, String apellido, String dni, String email, String telefono,
             String nombreUsuario, String contrasena) {
-        // llamo al constructor de Persona con los datos comunes
+
         super(nombre, apellido, dni, email, telefono);
+        // Evita crear un objeto que no cumpla sus datos de identificación obligatorios.
         if (nombreUsuario == null || nombreUsuario.isBlank()) {
             throw new IllegalArgumentException("El nombre de usuario no puede estar en blanco.");
         }
@@ -23,15 +34,20 @@ public class Usuario extends Persona implements Autenticable {
         }
 
         this.nombreUsuario = nombreUsuario.strip();
+        // Conserva la contraseña tal como se recibió para que los espacios formen parte de la credencial.
         this.contrasena = contrasena;
     }
 
-    // Devuelve el nombre de usuario
+    /** Devuelve el nombre de usuario. */
     public String getNombreUsuario() {
         return nombreUsuario;
     }
 
-    // Cambia el nombre de usuario
+    /**
+     * Actualiza el nombre de usuario después de validar el valor recibido.
+     *
+     * @param nombreUsuario nombre de usuario para el acceso al sistema.
+     */
     public void setNombreUsuario(String nombreUsuario) {
         if (nombreUsuario == null || nombreUsuario.isBlank()) {
             throw new IllegalArgumentException("El nombre de usuario no puede estar en blanco.");
@@ -40,12 +56,16 @@ public class Usuario extends Persona implements Autenticable {
         this.nombreUsuario = nombreUsuario.strip();
     }
 
-    // Devuelve la contraseña
+    /** Devuelve la contraseña del usuario. */
     public String getContrasena() {
         return contrasena;
     }
 
-    // Cambia la contraseña
+    /**
+     * Actualiza la contraseña después de validar el valor recibido.
+     *
+     * @param contrasena contraseña utilizada en la operación.
+     */
     public void setContrasena(String contrasena) {
         if (contrasena == null || contrasena.isBlank()) {
             throw new IllegalArgumentException("La contraseña no puede estar en blanco.");
@@ -54,7 +74,13 @@ public class Usuario extends Persona implements Autenticable {
         this.contrasena = contrasena;
     }
 
-    // Verifica si el usuario y la contraseña recibidos coinciden con los míos
+    /**
+     * Comprueba si el nombre de usuario y la contraseña corresponden al usuario.
+     *
+     * @param nombreUsuario nombre de usuario para el acceso al sistema.
+     * @param contrasena contraseña utilizada en la operación.
+     * @return {@code true} si ambas credenciales coinciden; {@code false} en otro caso.
+     */
     @Override
     public boolean validarCredenciales(String nombreUsuario, String contrasena) {
         return nombreUsuario != null && contrasena != null
@@ -62,7 +88,11 @@ public class Usuario extends Persona implements Autenticable {
                 && this.contrasena.equals(contrasena);
     }
 
-    // Muestra los datos del usuario (sin la contraseña)
+    /**
+     * Construye la representación textual de los datos del usuario, sin incluir la contraseña.
+     *
+     * @return el texto con los datos del objeto.
+     */
     @Override
     public String mostrarDatos() {
         return "Usuario: " + nombreUsuario

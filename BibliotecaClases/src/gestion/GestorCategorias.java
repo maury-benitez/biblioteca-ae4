@@ -7,8 +7,7 @@ import java.util.List;
 import modelo.Categoria;
 
 /**
- * Administra las categorías de libros: alta, baja, modificación y
- * listado con la cantidad de libros de cada una (RF5).
+ * Administra las categorías y consulta el catálogo para controlar sus libros asociados.
  */
 public class GestorCategorias implements Informable, Serializable {
 
@@ -17,6 +16,11 @@ public class GestorCategorias implements Informable, Serializable {
     private ArrayList<Categoria> categorias;
     private GestorLibros gestorLibros;
 
+    /**
+     * Inicializa el registro de categorías y lo vincula con el gestor de libros recibido.
+     *
+     * @param gestorLibros gestor del catálogo utilizado para consultar los libros de las categorías.
+     */
     public GestorCategorias(GestorLibros gestorLibros) {
         if (gestorLibros == null) {
             throw new IllegalArgumentException("El gestor de libros no puede ser nulo.");
@@ -26,20 +30,31 @@ public class GestorCategorias implements Informable, Serializable {
         this.gestorLibros = gestorLibros;
     }
 
-    // Devuelve una copia de la lista para que no la modifiquen desde afuera
+    /**
+     * Obtiene una copia de la lista de categorías registradas.
+     *
+     * @return una lista independiente con las mismas referencias a los objetos registrados.
+     */
     public List<Categoria> getCategorias() {
         return new ArrayList<>(categorias);
     }
 
+    /** Devuelve el gestor de libros compartido por el sistema. */
     public GestorLibros getGestorLibros() {
         return gestorLibros;
     }
 
-    // Da de alta una categoría si no se repite el ID ni el nombre
+    /**
+     * Registra una categoría si su identificador y su nombre no están repetidos.
+     *
+     * @param categoria categoría utilizada en la operación.
+     * @return {@code true} si se registra; {@code false} si es nula o sus datos de identificación están repetidos.
+     */
     public boolean altaCategoria(Categoria categoria) {
         if (categoria == null) {
             return false;
         }
+        // Mantiene únicos tanto el identificador como el nombre de cada categoría.
         if (buscarPorId(categoria.getIdCategoria()) != null
                 || existeNombre(categoria.getNombre(), categoria.getIdCategoria())) {
             return false;
@@ -49,10 +64,16 @@ public class GestorCategorias implements Informable, Serializable {
         return true;
     }
 
-    // Elimina la categoría solo si no tiene libros asociados
+    /**
+     * Elimina una categoría que no tiene libros asociados.
+     *
+     * @param idCategoria identificador de la categoría.
+     * @return {@code true} si se elimina; {@code false} si no existe o tiene libros asociados.
+     */
     public boolean bajaCategoria(int idCategoria) {
         Categoria categoria = buscarPorId(idCategoria);
 
+        // Conserva las categorías referenciadas por libros, aunque esos libros estén inactivos.
         if (categoria == null || gestorLibros.tieneLibrosAsociados(categoria)) {
             return false;
         }
@@ -61,7 +82,12 @@ public class GestorCategorias implements Informable, Serializable {
         return true;
     }
 
-    // Actualiza el nombre y la descripción de la categoría que tiene el mismo ID
+    /**
+     * Actualiza el nombre y la descripción de una categoría existente sin duplicar nombres.
+     *
+     * @param categoria categoría utilizada en la operación.
+     * @return {@code true} si se actualiza; {@code false} si la categoría es nula, no existe o el nombre pertenece a otra.
+     */
     public boolean modificarCategoria(Categoria categoria) {
         if (categoria == null) {
             return false;
@@ -69,7 +95,7 @@ public class GestorCategorias implements Informable, Serializable {
 
         Categoria existente = buscarPorId(categoria.getIdCategoria());
 
-        // no permito que quede con el nombre de otra categoría
+        // Evita asignar a esta categoría el nombre de otra categoría registrada.
         if (existente == null
                 || existeNombre(categoria.getNombre(), categoria.getIdCategoria())) {
             return false;
@@ -80,7 +106,12 @@ public class GestorCategorias implements Informable, Serializable {
         return true;
     }
 
-    // Devuelve la categoría con ese ID, o null si no existe
+    /**
+     * Busca una categoría por su identificador.
+     *
+     * @param idCategoria identificador de la categoría.
+     * @return la categoría encontrada o {@code null} si no existe.
+     */
     public Categoria buscarPorId(int idCategoria) {
         for (Categoria categoria : categorias) {
             if (categoria.getIdCategoria() == idCategoria) {
@@ -91,7 +122,11 @@ public class GestorCategorias implements Informable, Serializable {
         return null;
     }
 
-    // Arma el listado de categorías con la cantidad de libros de cada una
+    /**
+     * Genera el listado de categorías con la cantidad de títulos activos de cada una.
+     *
+     * @return el listado de categorías o un aviso si no hay categorías registradas.
+     */
     @Override
     public String generarInforme() {
         if (categorias.isEmpty()) {
@@ -100,6 +135,7 @@ public class GestorCategorias implements Informable, Serializable {
 
         String informe = "LISTADO DE CATEGORÍAS";
 
+        // Cuenta títulos activos por categoría, no la cantidad de ejemplares de esos títulos.
         for (Categoria categoria : categorias) {
             informe = informe + "\n" + categoria.getIdCategoria()
                     + " - " + categoria.getNombre()
@@ -110,8 +146,15 @@ public class GestorCategorias implements Informable, Serializable {
         return informe;
     }
 
-    // Indica si otra categoría (con distinto ID) ya usa ese nombre
+    /**
+     * Comprueba si otra categoría utiliza el nombre recibido, sin distinguir mayúsculas.
+     *
+     * @param nombre nombre que se busca entre las demás categorías.
+     * @param idPropio identificador de la categoría que se excluye de la comparación.
+     * @return {@code true} si otra categoría tiene ese nombre; {@code false} en otro caso.
+     */
     private boolean existeNombre(String nombre, int idPropio) {
+        // Excluye el propio identificador para permitir conservar el nombre durante una modificación.
         for (Categoria categoria : categorias) {
             if (categoria.getIdCategoria() != idPropio
                     && categoria.getNombre().equalsIgnoreCase(nombre.strip())) {

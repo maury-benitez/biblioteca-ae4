@@ -8,23 +8,31 @@ import modelo.Categoria;
 import modelo.Libro;
 
 /**
- * Menú de consola para administrar los libros: alta, baja,
- * modificación, búsquedas e informes (RF2).
+ * Presenta las opciones de consola para administrar, buscar y generar informes de libros.
  */
 public class MenuLibros {
 
     private final SistemaBiblioteca sistema;
     private final EntradaConsola entrada;
 
+    /**
+     * Prepara el menú con el sistema y el lector de consola recibidos.
+     *
+     * @param sistema sistema de biblioteca compartido por los menús.
+     * @param entrada lector utilizado para solicitar y validar las respuestas de consola.
+     */
     public MenuLibros(SistemaBiblioteca sistema, EntradaConsola entrada) {
         this.sistema = sistema;
         this.entrada = entrada;
     }
 
-    // Muestra el menú y repite hasta que el usuario elige volver
+    /**
+     * Presenta las opciones de libros y atiende la selección hasta que se elige volver.
+     */
     public void mostrar() {
         int opcion;
 
+        // Mantiene el menú disponible después de cada operación hasta que se elige volver.
         do {
             System.out.println("\n--- LIBROS ---");
             System.out.println("1. Alta de libro");
@@ -55,10 +63,13 @@ public class MenuLibros {
         } while (opcion != 0);
     }
 
-    // Pide los datos y da de alta un libro en una categoría existente
+    /**
+     * Solicita los datos para registrar un libro y comunica el resultado.
+     */
     private void altaLibro() {
         System.out.println("\nAlta de libro");
 
+        // Exige una categoría existente para evitar crear libros sin clasificación.
         if (sistema.getGestorCategorias().getCategorias().isEmpty()) {
             System.out.println("Primero debe cargar al menos una categoría.");
             return;
@@ -84,12 +95,14 @@ public class MenuLibros {
                 System.out.println("Ya existe un libro con ese ISBN.");
             }
         } catch (IllegalArgumentException ex) {
-            // el constructor rechazó algún dato, muestro el motivo
+
             System.out.println(ex.getMessage());
         }
     }
 
-    // Pide el ISBN y da de baja el libro si no tiene ejemplares prestados
+    /**
+     * Busca un libro, comprueba las condiciones de baja y solicita confirmación antes de realizarla.
+     */
     private void bajaLibro() {
         System.out.println("\nBaja de libro");
         String isbn = entrada.leerCadena("ISBN del libro: ");
@@ -101,6 +114,7 @@ public class MenuLibros {
 
         System.out.println(libro.mostrarDatos());
 
+        // Solicita una confirmación explícita antes de aplicar la baja.
         if (!entrada.confirmar("¿Confirma la baja?")) {
             System.out.println("Operación cancelada.");
             return;
@@ -113,12 +127,14 @@ public class MenuLibros {
                 System.out.println("No se puede dar de baja: el libro tiene ejemplares prestados.");
             }
         } catch (IllegalStateException ex) {
-            // el sistema avisa si no hay una sesión iniciada
+
             System.out.println(ex.getMessage());
         }
     }
 
-    // Pide el ISBN y permite cambiar los datos del libro, menos el ISBN
+    /**
+     * Solicita los cambios elegidos para un libro y comunica el resultado de la modificación.
+     */
     private void modificarLibro() {
         System.out.println("\nModificar libro");
         String isbn = entrada.leerCadena("ISBN del libro: ");
@@ -130,7 +146,7 @@ public class MenuLibros {
 
         System.out.println(libro.mostrarDatos());
 
-        // arranco con los datos actuales y cambio solo los que el usuario elija
+        // Conserva los valores actuales de los campos que el usuario no elija modificar.
         String titulo = libro.getTitulo();
         String autor = libro.getAutor();
         Categoria categoria = libro.getCategoria();
@@ -156,6 +172,7 @@ public class MenuLibros {
         }
 
         try {
+            // Reúne los valores elegidos para que el gestor valide el inventario antes de modificar el registro.
             Libro modificado = new Libro(libro.getIsbn(), titulo, autor, categoria, cantidad);
 
             if (sistema.getGestorLibros().modificarLibro(modificado)) {
@@ -169,7 +186,9 @@ public class MenuLibros {
         }
     }
 
-    // Permite buscar por ISBN, título, autor o categoría
+    /**
+     * Solicita el criterio de búsqueda y muestra los libros activos encontrados.
+     */
     private void buscarLibros() {
         GestorLibros gestorLibros = sistema.getGestorLibros();
 
@@ -204,7 +223,10 @@ public class MenuLibros {
         }
     }
 
-    // Muestra el informe general o los listados de disponibles y prestados
+    /**
+     * Presenta la selección de informe general, libros disponibles o libros prestados y muestra el
+     * resultado.
+     */
     private void mostrarInformes() {
         GestorLibros gestorLibros = sistema.getGestorLibros();
 
@@ -227,10 +249,16 @@ public class MenuLibros {
         }
     }
 
-    // Busca un libro por ISBN y avisa si no existe o está dado de baja
+    /**
+     * Busca un libro activo por ISBN y avisa si no se encuentra.
+     *
+     * @param isbn ISBN que identifica al libro.
+     * @return el libro activo encontrado o {@code null} si no existe o está inactivo.
+     */
     private Libro buscarLibroActivo(String isbn) {
         Libro libro = sistema.getGestorLibros().buscarPorIsbn(isbn);
 
+        // Oculta los libros dados de baja en las operaciones del menú, aunque sigan en el catálogo.
         if (libro == null || !libro.isActivo()) {
             System.out.println("No existe un libro activo con ese ISBN.");
             return null;
@@ -239,7 +267,11 @@ public class MenuLibros {
         return libro;
     }
 
-    // Muestra las categorías y devuelve la que elige el usuario, o null si no existe
+    /**
+     * Muestra las categorías y solicita el identificador de una de ellas.
+     *
+     * @return la categoría elegida o {@code null} si el identificador no existe.
+     */
     private Categoria elegirCategoria() {
         GestorCategorias gestorCategorias = sistema.getGestorCategorias();
 
@@ -254,7 +286,11 @@ public class MenuLibros {
         return categoria;
     }
 
-    // Muestra los datos de cada libro de la lista, o un aviso si está vacía
+    /**
+     * Imprime los datos de los libros recibidos o un aviso si la lista está vacía.
+     *
+     * @param libros lista de libros cuyos datos se mostrarán.
+     */
     private void mostrarLista(List<Libro> libros) {
         if (libros.isEmpty()) {
             System.out.println("No se encontraron libros.");

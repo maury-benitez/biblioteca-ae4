@@ -6,8 +6,7 @@ import java.util.List;
 import modelo.Socio;
 
 /**
- * Administra los socios de la biblioteca: alta, baja, modificación
- * y consulta (RF3). La baja es lógica: el socio queda inactivo.
+ * Administra el registro, la modificación, la baja lógica y las consultas de socios.
  */
 public class GestorSocios implements Serializable {
 
@@ -15,21 +14,34 @@ public class GestorSocios implements Serializable {
 
     private ArrayList<Socio> socios;
 
+    /**
+     * Inicializa un registro de socios vacío.
+     */
     public GestorSocios() {
         socios = new ArrayList<>();
     }
 
-    // Devuelve una copia de la lista con todos los socios, activos e inactivos
+    /**
+     * Obtiene una copia de la lista de socios registrados.
+     *
+     * @return una lista independiente con las mismas referencias a los objetos registrados.
+     */
     public List<Socio> getSocios() {
         return new ArrayList<>(socios);
     }
 
-    // Da de alta un socio activo si no se repiten el DNI ni el número
+    /**
+     * Registra un socio activo sin repetir su DNI ni su número de socio.
+     *
+     * @param socio socio utilizado en la operación.
+     * @return {@code true} si se registra; {@code false} si es nulo, está inactivo o alguno de sus identificadores ya existe.
+     */
     public boolean altaSocio(Socio socio) {
         if (socio == null || !socio.isActivo() || existeDni(socio.getDni())) {
             return false;
         }
 
+        // También reserva los números de socios inactivos para no reutilizar su identidad.
         for (Socio registrado : socios) {
             if (registrado.getNroSocio() == socio.getNroSocio()) {
                 return false;
@@ -40,8 +52,12 @@ public class GestorSocios implements Serializable {
         return true;
     }
 
-    // Da de baja al socio dejándolo inactivo. Los préstamos pendientes
-    // se controlan antes, en SistemaBiblioteca
+    /**
+     * Desactiva al socio activo con el DNI recibido.
+     *
+     * @param dni DNI que identifica a la persona.
+     * @return {@code true} si se desactiva; {@code false} si no existe un socio activo con ese DNI.
+     */
     boolean bajaSocio(String dni) {
         Socio socio = buscarPorDni(dni);
 
@@ -49,11 +65,17 @@ public class GestorSocios implements Serializable {
             return false;
         }
 
+        // El sistema coordinador comprueba los préstamos antes de solicitar esta baja lógica.
         socio.desactivar();
         return true;
     }
 
-    // Actualiza los datos del socio que tiene el mismo DNI que el recibido
+    /**
+     * Actualiza los datos personales de un socio activo conservando su DNI y su número.
+     *
+     * @param socio socio utilizado en la operación.
+     * @return {@code true} si se actualiza; {@code false} si se recibe un socio nulo o no hay un socio activo con ese DNI.
+     */
     public boolean modificarSocio(Socio socio) {
         if (socio == null) {
             return false;
@@ -65,7 +87,7 @@ public class GestorSocios implements Serializable {
             return false;
         }
 
-        // el DNI y el número de socio no cambian, copio el resto de los datos
+        // Conserva el DNI, el número y la instancia que pueden referenciar los préstamos.
         existente.setNombre(socio.getNombre());
         existente.setApellido(socio.getApellido());
         existente.setEmail(socio.getEmail());
@@ -73,7 +95,12 @@ public class GestorSocios implements Serializable {
         return true;
     }
 
-    // Devuelve el socio activo con ese DNI, o null si no existe
+    /**
+     * Busca al socio activo con el DNI recibido.
+     *
+     * @param dni DNI que identifica a la persona.
+     * @return el socio encontrado o {@code null} si el DNI es nulo o no corresponde a un socio activo.
+     */
     public Socio buscarPorDni(String dni) {
         if (dni == null) {
             return null;
@@ -88,7 +115,13 @@ public class GestorSocios implements Serializable {
         return null;
     }
 
-    // Devuelve los socios activos cuyo nombre o apellido contiene el texto buscado
+    /**
+     * Busca socios activos cuyo nombre o apellido contiene el texto recibido, sin distinguir
+     * mayúsculas.
+     *
+     * @param nombre texto que se busca en el nombre o apellido del socio.
+     * @return una lista de coincidencias, vacía si la búsqueda es nula, está en blanco o no tiene resultados.
+     */
     public List<Socio> buscarPorNombre(String nombre) {
         List<Socio> encontrados = new ArrayList<>();
 
@@ -96,7 +129,7 @@ public class GestorSocios implements Serializable {
             return encontrados;
         }
 
-        // paso todo a minúsculas para que no importe cómo lo escriban
+        // Normaliza el texto para admitir coincidencias parciales sin distinguir mayúsculas.
         String buscado = nombre.strip().toLowerCase();
 
         for (Socio socio : socios) {
@@ -110,12 +143,18 @@ public class GestorSocios implements Serializable {
         return encontrados;
     }
 
-    // Indica si el DNI está registrado, incluidos los socios dados de baja
+    /**
+     * Comprueba si un DNI está registrado, incluidos los socios inactivos.
+     *
+     * @param dni DNI que identifica a la persona.
+     * @return {@code true} si el DNI está registrado; {@code false} si es nulo, está en blanco o no existe.
+     */
     public boolean existeDni(String dni) {
         if (dni == null || dni.isBlank()) {
             return false;
         }
 
+        // Incluye los socios inactivos para evitar reutilizar un DNI ya registrado.
         for (Socio socio : socios) {
             if (socio.getDni().equals(dni.strip())) {
                 return true;

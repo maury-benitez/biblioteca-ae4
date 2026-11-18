@@ -1,12 +1,17 @@
 package modelo;
 
-/*
- * Interfaz Autenticable: la implementan las clases que pueden
- * iniciar sesión en el sistema.
+/**
+ * Define la comprobación de credenciales de los objetos que permiten autenticar usuarios.
  */
 public interface Autenticable {
 
-    // Devuelve true si el usuario y la contraseña recibidos son correctos
+    /**
+     * Comprueba si el nombre de usuario y la contraseña corresponden al usuario.
+     *
+     * @param nombreUsuario nombre de usuario para el acceso al sistema.
+     * @param contrasena contraseña utilizada en la operación.
+     * @return {@code true} si ambas credenciales coinciden; {@code false} en otro caso.
+     */
     boolean validarCredenciales(String nombreUsuario, String contrasena);
 
 }

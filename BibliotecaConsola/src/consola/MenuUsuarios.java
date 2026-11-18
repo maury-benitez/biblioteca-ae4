@@ -4,11 +4,20 @@ import gestion.SistemaBiblioteca;
 import java.io.UncheckedIOException;
 import modelo.Usuario;
 
+/**
+ * Presenta el acceso, el registro de usuarios y la recuperación de sus datos de acceso.
+ */
 public class MenuUsuarios {
 
     private final SistemaBiblioteca sistema;
     private final EntradaConsola entrada;
 
+    /**
+     * Prepara el menú con el sistema y el lector de consola recibidos.
+     *
+     * @param sistema sistema de biblioteca compartido por los menús.
+     * @param entrada lector utilizado para solicitar y validar las respuestas de consola.
+     */
     public MenuUsuarios(SistemaBiblioteca sistema, EntradaConsola entrada) {
         if (sistema == null || entrada == null) {
             throw new IllegalArgumentException("El sistema y la entrada de consola son obligatorios.");
@@ -18,7 +27,13 @@ public class MenuUsuarios {
         this.entrada = entrada;
     }
 
+    /**
+     * Atiende las opciones de acceso hasta iniciar una sesión, elegir salir o finalizar la entrada.
+     *
+     * @return {@code true} si queda una sesión activa; {@code false} si se sale o no se puede continuar la lectura.
+     */
     public boolean mostrarLogueo() {
+        // Mantiene las opciones de acceso disponibles hasta autenticar al usuario o elegir salir.
         while (!sistema.haySesionActiva()) {
             System.out.println("\nACCESO A LA BIBLIOTECA");
             System.out.println("1. Iniciar sesión");
@@ -51,6 +66,7 @@ public class MenuUsuarios {
             } catch (IllegalArgumentException ex) {
                 System.out.println("Error: " + ex.getMessage());
             } catch (UncheckedIOException ex) {
+                // Aclara que un fallo de persistencia no revierte los cambios que ya se hicieron en memoria.
                 System.out.println("No se pudieron guardar los cambios. Los cambios siguen en memoria.");
                 System.out.println("Error: " + ex.getMessage());
             } catch (IllegalStateException ex) {
@@ -62,6 +78,9 @@ public class MenuUsuarios {
         return true;
     }
 
+    /**
+     * Solicita las credenciales y comunica el resultado del inicio de sesión.
+     */
     private void iniciarSesion() {
         String nombreUsuario = entrada.leerCadena("Nombre de usuario: ");
         String contrasena = entrada.leerContrasena("Contraseña: ");
@@ -73,6 +92,10 @@ public class MenuUsuarios {
         }
     }
 
+    /**
+     * Solicita los datos y la confirmación de contraseña, registra el usuario y guarda los datos si
+     * tiene éxito.
+     */
     private void registrarUsuario() {
         String nombre = entrada.leerCadena("Nombre: ");
         String apellido = entrada.leerCadena("Apellido: ");
@@ -83,6 +106,7 @@ public class MenuUsuarios {
         String contrasena = entrada.leerContrasena("Contraseña: ");
         String confirmacion = entrada.leerContrasena("Repita la contraseña: ");
 
+        // Evita guardar una contraseña diferente de la confirmada por el usuario.
         if (!contrasena.equals(confirmacion)) {
             System.out.println("Las contraseñas no coinciden.");
             return;
@@ -91,6 +115,7 @@ public class MenuUsuarios {
         Usuario usuario = new Usuario(nombre, apellido, dni, email, telefono, nombreUsuario, contrasena);
 
         if (sistema.getGestorUsuarios().registrarUsuario(usuario)) {
+            // Guarda el cambio de credenciales antes de comunicar que la operación finalizó correctamente.
             sistema.guardarDatos();
             System.out.println("Usuario registrado. Ya puede iniciar sesión.");
         } else {
@@ -98,18 +123,24 @@ public class MenuUsuarios {
         }
     }
 
+    /**
+     * Solicita los datos de identificación y una nueva contraseña confirmada; guarda el cambio si
+     * tiene éxito.
+     */
     private void recuperarContrasena() {
         String nombreUsuario = entrada.leerCadena("Nombre de usuario: ");
         String dni = entrada.leerCadena("DNI: ");
         String contrasena = entrada.leerContrasena("Nueva contraseña: ");
         String confirmacion = entrada.leerContrasena("Repita la nueva contraseña: ");
 
+        // Evita guardar una contraseña diferente de la confirmada por el usuario.
         if (!contrasena.equals(confirmacion)) {
             System.out.println("Las contraseñas no coinciden.");
             return;
         }
 
         if (sistema.getGestorUsuarios().recuperarContrasena(nombreUsuario, dni, contrasena)) {
+            // Guarda el cambio de credenciales antes de comunicar que la operación finalizó correctamente.
             sistema.guardarDatos();
             System.out.println("La contraseña fue actualizada.");
         } else {
@@ -117,6 +148,9 @@ public class MenuUsuarios {
         }
     }
 
+    /**
+     * Solicita el DNI y el correo electrónico e informa el nombre de usuario si coinciden.
+     */
     private void recuperarUsuario() {
         String dni = entrada.leerCadena("DNI: ");
         String email = entrada.leerCadena("Email: ");

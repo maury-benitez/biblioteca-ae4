@@ -6,23 +6,31 @@ import java.util.List;
 import modelo.Socio;
 
 /**
- * Menú de consola para administrar los socios: alta, baja,
- * modificación y búsqueda (RF3).
+ * Presenta las opciones de consola para registrar, modificar, dar de baja y buscar socios.
  */
 public class MenuSocios {
 
     private final SistemaBiblioteca sistema;
     private final EntradaConsola entrada;
 
+    /**
+     * Prepara el menú con el sistema y el lector de consola recibidos.
+     *
+     * @param sistema sistema de biblioteca compartido por los menús.
+     * @param entrada lector utilizado para solicitar y validar las respuestas de consola.
+     */
     public MenuSocios(SistemaBiblioteca sistema, EntradaConsola entrada) {
         this.sistema = sistema;
         this.entrada = entrada;
     }
 
-    // Muestra el menú y repite hasta que el usuario elige volver
+    /**
+     * Presenta las opciones de socios y atiende la selección hasta que se elige volver.
+     */
     public void mostrar() {
         int opcion;
 
+        // Mantiene el menú disponible después de cada operación hasta que se elige volver.
         do {
             System.out.println("\n--- SOCIOS ---");
             System.out.println("1. Alta de socio");
@@ -49,7 +57,9 @@ public class MenuSocios {
         } while (opcion != 0);
     }
 
-    // Pide los datos y da de alta un socio con el siguiente número libre
+    /**
+     * Solicita los datos para registrar un socio y comunica el resultado.
+     */
     private void altaSocio() {
         GestorSocios gestorSocios = sistema.getGestorSocios();
 
@@ -70,12 +80,14 @@ public class MenuSocios {
                 System.out.println("Ya existe un socio con ese DNI.");
             }
         } catch (IllegalArgumentException ex) {
-            // el constructor rechazó algún dato, muestro el motivo
+
             System.out.println(ex.getMessage());
         }
     }
 
-    // Pide el DNI y da de baja al socio si no tiene préstamos pendientes
+    /**
+     * Busca un socio, comprueba las condiciones de baja y solicita confirmación antes de realizarla.
+     */
     private void bajaSocio() {
         System.out.println("\nBaja de socio");
         String dni = entrada.leerCadena("DNI del socio: ");
@@ -88,11 +100,13 @@ public class MenuSocios {
 
         System.out.println(socio.mostrarDatos());
 
+        // Informa el impedimento antes de pedir confirmación para una baja que no podría realizarse.
         if (sistema.getGestorPrestamos().tienePrestamosPendientes(socio)) {
             System.out.println("No se puede dar de baja: el socio tiene préstamos pendientes.");
             return;
         }
 
+        // Solicita una confirmación explícita antes de aplicar la baja.
         if (!entrada.confirmar("¿Confirma la baja?")) {
             System.out.println("Operación cancelada.");
             return;
@@ -105,12 +119,14 @@ public class MenuSocios {
                 System.out.println("No se pudo dar de baja al socio.");
             }
         } catch (IllegalStateException ex) {
-            // el sistema avisa si no hay una sesión iniciada
+
             System.out.println(ex.getMessage());
         }
     }
 
-    // Pide el DNI y permite cambiar los datos del socio, menos el DNI y el número
+    /**
+     * Solicita los cambios elegidos para un socio y comunica el resultado de la modificación.
+     */
     private void modificarSocio() {
         System.out.println("\nModificar socio");
         String dni = entrada.leerCadena("DNI del socio: ");
@@ -123,7 +139,7 @@ public class MenuSocios {
 
         System.out.println(socio.mostrarDatos());
 
-        // arranco con los datos actuales y cambio solo los que el usuario elija
+        // Conserva los valores actuales de los campos que el usuario no elija modificar.
         String nombre = socio.getNombre();
         String apellido = socio.getApellido();
         String email = socio.getEmail();
@@ -156,7 +172,9 @@ public class MenuSocios {
         }
     }
 
-    // Permite buscar un socio por DNI o varios por nombre o apellido
+    /**
+     * Solicita una búsqueda por DNI, nombre o apellido y muestra los socios activos encontrados.
+     */
     private void buscarSocios() {
         System.out.println("\nBuscar socios");
         System.out.println("1. Por DNI");
@@ -186,10 +204,15 @@ public class MenuSocios {
         }
     }
 
-    // Calcula el próximo número de socio: el mayor que haya más uno
+    /**
+     * Calcula el siguiente número a partir del mayor número de socio registrado.
+     *
+     * @return el mayor número registrado más uno, o uno si no hay socios.
+     */
     private int siguienteNroSocio() {
         int mayor = 0;
 
+        // Incluye los socios inactivos para no reutilizar sus números.
         for (Socio socio : sistema.getGestorSocios().getSocios()) {
             if (socio.getNroSocio() > mayor) {
                 mayor = socio.getNroSocio();
